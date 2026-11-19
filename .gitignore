@@ -1,0 +1,20 @@
+# Runtime data and local credentials
+dmd-klinika/.secret
+dmd-klinika/data.db
+dmd-klinika/__pycache__/
+dmd-klinika/.venv/
+__pycache__/
+.venv/
+
+# Locally downloaded tools
+.tools/
+
+.secret
+data.db
+__pycache__/
+.tools/
+
+.secret
+data.db
+__pycache__/
+.tools/

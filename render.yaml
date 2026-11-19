@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: dmd-klinika
+    runtime: python
+    plan: free
+    rootDir: dmd-klinika
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app
+    healthCheckPath: /
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false

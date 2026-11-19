@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DMD Admin</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--bg:#f3f6f9;--card:#fff;--ink:#0f2740;--mut:#64788c;--navy:#0f2a47;--teal:#14b8c8;--line:#e2eaf1;--soft:#e6f7f9;--red:#e5484d;--grn:#16a34a;--ylw:#d97706;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1623;--card:#122437;--ink:#e8f1f8;--mut:#96abbe;--line:#223a52;--soft:#10333b}}
+:root[data-theme="dark"]{--bg:#0a1623;--card:#122437;--ink:#e8f1f8;--mut:#96abbe;--line:#223a52;--soft:#10333b}
+*{box-sizing:border-box;margin:0}
+html{height:100%}body{min-height:100%;background:var(--bg);color:var(--ink);font:14.5px/1.5 "Plus Jakarta Sans",system-ui,sans-serif;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--card);z-index:60}
+button,input,select,textarea{font:inherit;color:inherit}
+.logo{font-weight:800;font-size:20px;letter-spacing:-.3px}.logo b{color:var(--teal)}.logo small{font-weight:500;font-size:11px;color:var(--mut);margin-left:4px}
+#login{min-height:calc(100vh - env(safe-area-inset-top,0px));display:grid;place-items:center;padding:20px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;width:100%;max-width:380px;display:grid;gap:12px}
+.box h2{font-size:20px}
+input,select,textarea{width:100%;padding:12px 13px;border-radius:11px;border:1px solid var(--line);background:var(--bg)}
+textarea{min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--teal);border-color:transparent}
+.btn{border:0;border-radius:11px;padding:11px 16px;font-weight:600;cursor:pointer;background:var(--navy);color:#fff}
+.btn.t{background:var(--teal);color:#06222a}.btn.o{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn.d{background:#fdecec;color:var(--red)}
+.btn.s{padding:8px 12px;font-size:13px}
+.hint{font-size:12.5px;color:var(--mut)}.err{color:var(--red);font-size:13px;min-height:18px}
+#app{display:none}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:11px 16px}
+header .logo{flex:1}#burger{background:none;border:0;font-size:24px;cursor:pointer}
+aside{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--navy);color:#cfe0ef;z-index:50;transform:translateX(-100%);transition:transform .2s;padding:calc(18px + env(safe-area-inset-top,0px)) 14px 18px;display:flex;flex-direction:column;gap:4px}
+aside.o{transform:none}aside .logo{color:#fff;padding:0 8px 14px}
+aside a{display:flex;gap:10px;align-items:center;padding:11px 12px;border-radius:10px;cursor:pointer;font-weight:500}
+aside a.on{background:rgba(20,184,200,.18);color:#fff;box-shadow:inset 3px 0 var(--teal)}
+aside .out{margin-top:auto;opacity:.8}
+#shade{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40}#shade.o{display:block}
+main{padding:16px;max-width:900px;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}.top h1{font-size:22px;font-weight:800}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat b{display:block;font-size:28px;font-weight:800}.stat span{color:var(--mut);font-size:13px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.item h3{font-size:15.5px;margin-bottom:2px}.item p{color:var(--mut);font-size:13px;word-break:break-word}
+.acts{display:flex;gap:8px;margin-top:10px}.acts .btn{flex:1}
+.bd{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--teal);margin-right:6px}
+.bd.g{background:#e3f6ea;color:var(--grn)}.bd.y{background:#fdf1de;color:var(--ylw)}
+.empty{text-align:center;color:var(--mut);padding:30px}
+#sheet{display:none;position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.5);align-items:flex-end;justify-content:center}
+#sheet.o{display:flex}
+.sh{background:var(--card);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));display:grid;gap:12px}
+.sh h2{font-size:18px}label{font-size:12px;font-weight:700;color:var(--mut);letter-spacing:.5px;display:block;margin-bottom:4px}
+.seo{border:1px dashed var(--line);border-radius:12px;padding:12px;display:grid;gap:10px}
+.seo h4{font-size:13px}.cnt{float:right;font-weight:500}.pv{background:var(--bg);border-radius:10px;padding:10px;font-size:13px}
+.pv u{color:#1a73e8;text-decoration:none;display:block;font-size:16px}.pv i{color:var(--grn);font-style:normal;font-size:12px}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 18px;border-radius:99px;font-size:13.5px;z-index:90;display:none}
+@media(min-width:900px){aside{transform:none}#burger{display:none}#app{padding-left:260px}#shade{display:none!important}.grid{grid-template-columns:repeat(4,1fr)}#sheet{align-items:center}.sh{border-radius:20px}}
+</style>
+</head>
+<body>
+<div id="login"><form class="box" id="lf">
+  <div class="logo">DMD<b>KLINIKA</b><small>Admin panel</small></div>
+  <h2>Tizimga kirish</h2>
+  <input id="em" type="email" value="" autocomplete="username">
+  <input id="pw" type="password" placeholder="Parol" autocomplete="current-password">
+  <div class="err" id="er"></div>
+  <button class="btn t" type="submit">Kirish</button>
+  <p class="hint">Email va parol <b>app.py</b> dagi ADMIN_EMAIL / ADMIN_PASSWORD orqali belgilanadi.</p>
+</form></div>
+
+<div id="app">
+  <header><button id="burger" aria-label="Menyu">☰</button><div class="logo">DMD<b>KLINIKA</b><small>Admin</small></div></header>
+  <aside id="side"></aside><div id="shade"></div>
+  <main id="main"></main>
+</div>
+<div id="sheet"><div class="sh" id="sh"></div></div>
+<div id="toast"></div>
+
+<script>
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var $=function(i){return document.getElementById(i)};
+var DB={posts:[],xizmatlar:[],shifokorlar:[],narxlar:[],savollar:[],arizalar:[],set:{tel:'',manzil:'',vaqt:''}};
+function api(m,p,b){return fetch('/api/'+p,{method:m,headers:{'Content-Type':'application/json'},credentials:'same-origin',body:b?JSON.stringify(b):undefined}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})}
+function loadAll(){return api('GET','admin/all').then(function(d){DB=d})}
+function toast(t){var e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(function(){e.style.display='none'},1800)}
+
+var C={
+posts:{name:'Postlar',ico:'📰',add:'Yangi post',main:'title',sub:function(r){return r.tur+' · /'+r.slug},badge:'holat',f:[
+ ['title','SARLAVHA','text',1],['tur','TUR',['Maqola','Yangilik']],['kat','KATEGORIYA','text'],['slug','SLUG (MANZIL)','text',1],['matn','MATN','area'],['holat','HOLAT',['Qoralama','Chop etilgan']]],seo:1},
+xizmatlar:{name:'Xizmatlar',ico:'🩺',add:'Yangi xizmat',main:'nomi',sub:function(r){return r.tavsif+(r.vaqt?' · '+r.vaqt:'')},f:[['nomi','NOMI','text',1],['tavsif','TAVSIF','area'],['vaqt','DAVOMIYLIGI','text']]},
+shifokorlar:{name:'Shifokorlar',ico:'👨‍⚕️',add:'Yangi shifokor',main:'ism',sub:function(r){return r.mut+(r.yil?' · '+r.yil+' tajriba':'')},badge:'holat',f:[['ism','ISM FAMILIYA','text',1],['mut','MUTAXASSISLIK','text',1],['yil','TAJRIBA (MASALAN: 10 YIL)','text'],['holat','HOLAT',['Faol','Nofaol']]]},
+narxlar:{name:'Narxlar',ico:'💳',add:'Yangi narx',main:'xizmat',sub:function(r){return r.narx},f:[['xizmat','XIZMAT NOMI','text',1],['narx','NARXI','text',1]]},
+savollar:{name:'Savol-javob',ico:'❓',add:'Yangi savol',main:'savol',sub:function(r){return r.javob},f:[['savol','SAVOL','text',1],['javob','JAVOB','area',1]]},
+arizalar:{name:'Arizalar',ico:'📥',add:'Yangi ariza',main:'ism',sub:function(r){return r.tel+' · '+r.xizmat},badge:'holat',f:[['ism','ISM','text',1],['tel','TELEFON','text',1],['xizmat','XIZMAT','text'],['holat','HOLAT',['Yangi','Bogʻlanildi','Bekor qilindi']]]}
+};
+var VIEWS=['dash','posts','xizmatlar','narxlar','savollar','arizalar','set'];
+var cur='dash';
+
+function nav(){
+ var h='<div class="logo">DMD<b>KLINIKA</b></div>';
+ h+=link('dash','📊','Dashboard');
+ ['posts','xizmatlar','shifokorlar','narxlar','savollar','arizalar'].forEach(function(k){h+=link(k,C[k].ico,C[k].name)});
+ h+=link('set','⚙️','Sayt sozlamalari');
+ h+='<a class="out" id="lo">🚪 Chiqish</a>';
+ $('side').innerHTML=h;
+ $('lo').onclick=function(){fetch('/api/logout',{method:'POST'});$('app').style.display='none';$('login').style.display='grid';$('pw').value=''};
+}
+function link(k,i,t){return '<a data-v="'+k+'" class="'+(k===cur?'on':'')+'">'+i+' '+t+'</a>'}
+$('side').onclick=function(e){var a=e.target.closest('[data-v]');if(a){go(a.dataset.v)}};
+function menu(o){$('side').classList.toggle('o',o);$('shade').classList.toggle('o',o)}
+$('burger').onclick=function(){menu(true)};$('shade').onclick=function(){menu(false)};
+
+function go(v){cur=v;menu(false);nav();render();window.scrollTo(0,0)}
+function bd(v){var c=/Chop|Bogʻ/.test(v)?'g':(/Qoral|Bekor/.test(v)?'y':'');return '<span class="bd '+c+'">'+esc(v)+'</span>'}
+
+function render(){
+ var m=$('main'),h='';
+ if(cur==='dash'){
+  var P=DB.posts;
+  h='<div class="top"><h1>Dashboard</h1><button class="btn t" data-add="posts">+ Yangi post</button></div><div class="grid">'+
+  st(P.filter(function(p){return p.tur==='Maqola'}).length,'Maqolalar')+st(P.filter(function(p){return p.tur==='Yangilik'}).length,'Yangiliklar')+
+  st(P.filter(function(p){return p.holat==='Qoralama'}).length,'Qoralamalar')+st(DB.arizalar.filter(function(a){return a.holat==='Yangi'}).length,'Yangi arizalar')+'</div>';
+  h+='<h3 style="margin:6px 0 10px">Soʻnggi postlar</h3>'+(P.slice(-3).reverse().map(function(p){return '<div class="item"><h3>'+esc(p.title)+'</h3><p>'+bd(p.holat)+esc(p.tur)+'</p></div>'}).join('')||'<div class="empty">Hali post yoʻq</div>');
+  h+='<h3 style="margin:14px 0 10px">Soʻnggi arizalar</h3>'+(DB.arizalar.slice(-3).reverse().map(function(a){return '<div class="item"><h3>'+esc(a.ism)+'</h3><p>'+bd(a.holat)+esc(a.tel)+' · '+esc(a.xizmat)+'</p></div>'}).join('')||'<div class="empty">Ariza yoʻq</div>');
+ } else if(cur==='set'){
+  var s=DB.set;
+  h='<div class="top"><h1>Sayt sozlamalari</h1></div><div class="card" style="display:grid;gap:12px"><div><label>TELEFON</label><input id="s1" value="'+esc(s.tel)+'"></div><div><label>MANZIL</label><input id="s2" value="'+esc(s.manzil)+'"></div><div><label>ISH VAQTI</label><input id="s3" value="'+esc(s.vaqt)+'"></div><button class="btn t" id="ss">Saqlash</button></div>';
+ } else {
+  var c=C[cur],L=DB[cur];
+  h='<div class="top"><h1>'+c.name+' <small style="color:var(--mut);font-size:14px">('+L.length+')</small></h1><button class="btn t" data-add="'+cur+'">+ '+c.add+'</button></div>';
+  h+=L.length?L.slice().reverse().map(function(r){return '<div class="item"><h3>'+esc(r[c.main])+'</h3><p>'+(c.badge?bd(r[c.badge]):'')+esc(c.sub(r))+'</p><div class="acts"><button class="btn o s" data-ed="'+r.id+'">✏️ Tahrir</button><button class="btn d s" data-del="'+r.id+'">🗑 Oʻchir</button></div></div>'}).join(''):'<div class="empty">Hozircha bo‘sh. “'+c.add+'” tugmasini bosing.</div>';
+ }
+ m.innerHTML=h;
+ var ss=$('ss');if(ss)ss.onclick=function(){api('PUT','settings',{tel:$('s1').value,manzil:$('s2').value,vaqt:$('s3').value}).then(function(r){DB.set=r;toast('Saqlandi \u2713')}).catch(function(){toast('Xato')})};
+}
+function st(n,t){return '<div class="card stat"><b>'+n+'</b><span>'+t+'</span></div>'}
+
+$('main').onclick=function(e){
+ var t=e.target.closest('button');if(!t)return;
+ if(t.dataset.add)form(t.dataset.add,null);
+ else if(t.dataset.ed)form(cur,+t.dataset.ed);
+ else if(t.dataset.del){if(confirm('O\u02bbchirilsinmi?')){var did=+t.dataset.del,kk=cur;api('DELETE',kk+'/'+did).then(function(){DB[kk]=DB[kk].filter(function(r){return r.id!==did});render();toast('O\u02bbchirildi')}).catch(function(){toast('Xato: o\u02bbchirilmadi')})}}
+};
+
+function slug(s){return s.toLowerCase().replace(/[ʻ'’`]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
+function form(k,id){
+ var c=C[k],rec=id?DB[k].filter(function(r){return r.id===id})[0]:{};
+ var h='<h2>'+(id?'Tahrirlash':c.add)+'</h2>';
+ c.f.forEach(function(f){
+  var v=rec[f[0]]!=null?rec[f[0]]:'',inp;
+  if(Array.isArray(f[2]))inp='<select id="f_'+f[0]+'">'+f[2].map(function(o){return '<option'+(o===v?' selected':'')+'>'+o+'</option>'}).join('')+'</select>';
+  else if(f[2]==='area')inp='<textarea id="f_'+f[0]+'">'+esc(v)+'</textarea>';
+  else inp='<input id="f_'+f[0]+'" value="'+esc(v)+'">';
+  h+='<div><label>'+f[1]+(f[3]?' *':'')+'</label>'+inp+'</div>';
+ });
+ if(c.seo)h+='<div class="seo"><h4>🌐 SEO (UZ)</h4><div><label>SEO SARLAVHA <span class="cnt" id="c1"></span></label><input id="f_seot" value="'+esc(rec.seot||'')+'"></div><div><label>SEO TAVSIF <span class="cnt" id="c2"></span></label><textarea id="f_seod" style="min-height:70px">'+esc(rec.seod||'')+'</textarea></div><div class="pv" id="pv"></div></div>';
+ h+='<div class="err" id="fe"></div><div style="display:flex;gap:8px"><button class="btn o" id="cx" style="flex:1">Bekor qilish</button><button class="btn t" id="sv" style="flex:1">Saqlash</button></div>';
+ $('sh').innerHTML=h;$('sheet').classList.add('o');
+ if(c.seo){
+  var seoUp=function(){var t=$('f_seot').value||$('f_title').value,d=$('f_seod').value;$('c1').textContent=$('f_seot').value.length+'/60';$('c2').textContent=d.length+'/160';$('pv').innerHTML='<u>'+esc(t||'Sarlavha')+'</u><i>dmd.uz/'+esc($('f_slug').value||'slug')+'</i><div>'+esc(d||'Tavsif shu yerda koʻrinadi')+'</div>'};
+  ['f_seot','f_seod','f_title','f_slug'].forEach(function(i){$(i).oninput=seoUp});
+  var touched=!!rec.slug;$('f_slug').addEventListener('input',function(){touched=true});
+  $('f_title').addEventListener('input',function(){if(!touched){$('f_slug').value=slug($('f_title').value);seoUp()}});
+  seoUp();
+ }
+ $('cx').onclick=close;
+ $('sv').onclick=function(){
+  var o={};
+  c.f.forEach(function(f){o[f[0]]=$('f_'+f[0]).value.trim()});
+  if(c.seo){o.seot=$('f_seot').value.trim();o.seod=$('f_seod').value.trim()}
+  for(var i=0;i<c.f.length;i++){if(c.f[i][3]&&!o[c.f[i][0]]){$('fe').textContent='“'+c.f[i][1].toLowerCase()+'” maydonini toʻldiring';return}}
+  api(id?'PUT':'POST',k+(id?'/'+id:''),o).then(function(r){if(id)Object.assign(rec,r);else DB[k].push(r);close();render();toast('Saqlandi \u2713')}).catch(function(){$('fe').textContent='Xato: saqlanmadi (slug yoki maydonlarni tekshiring)'});
+ };
+}
+function close(){$('sheet').classList.remove('o')}
+$('sheet').onclick=function(e){if(e.target===$('sheet'))close()};
+
+var ok=function(){$('login').style.display='none';$('app').style.display='block';go('dash')};
+$('lf').onsubmit=function(e){
+ e.preventDefault();$('er').textContent='';
+ api('POST','login',{email:$('em').value,password:$('pw').value}).then(loadAll).then(ok).catch(function(){$('er').textContent='Email yoki parol notoʻgʻri'});
+};
+loadAll().then(ok).catch(function(){});
+</script>
+</body>
+</html>
